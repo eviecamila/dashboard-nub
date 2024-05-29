@@ -1,0 +1,24 @@
+@import url("https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css");
+
+.circle-wrapper {
+    width: 200px; /* Ancho de la barra */
+    height: 200px; /* Altura de la barra */
+    position: relative;
+
+  }
+  
+  .circle {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%; /* Para hacer la forma circular */
+    border: 10px solid; /* Cambia el color y el grosor de la barra */
+    border-bottom-color: transparent; /* Oculta la mitad superior de la barra */
+    /* animation: spin 2s linear infinite;*/
+    /* transform: rotate(180deg); */
+  }
+  
+  /* @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  } */
+  

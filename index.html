@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard del Clima</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link href="copia.css" rel="stylesheet" />
+    <link href="styles.css" rel="stylesheet" />
+  </head>
+
+  <body class="bg-gray-100 text-gray-800">
+    <div class="mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 p-4">
+      <!-- Barra de búsqueda -->
+      <div class="mb-4">
+        <div class="relative">
+          <input
+            type="text"
+            id="searchBar"
+            placeholder="Ejemplo: Ciudad de Mexico"
+            class="w-full py-2 px-4 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+          />
+          <button
+            onclick="buscarCiudad()"
+            type="button"
+            class="absolute right-0 top-1/2 transform -translate-y-1/2 px-3 py-2 bg-indigo-500 text-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 15l5-5m0 0l-5-5m5 5H4"
+              ></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <!-- Pronóstico extendido -->
+      <div class="bg-white rounded-lg shadow-md p-4 mb-4">
+        <h2 class="text-xl font-semibold mb-2">Pronóstico Extendido</h2>
+        <br />
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 place-items-center">
+          <!-- Datos del clima -->
+          <div class="">
+            <!-- Aquí irían los forecast-items -->
+            <div class="forecast-item">
+              <span id="day"></span>
+              &nbsp;-&nbsp;
+              <span id="city"></span>
+              <div class="temperature">
+                <div id="temp"><span id="avgTemp"></span>°C <br /></div>
+                Máx: <span id="maxTemp"></span>°C <br />
+                Mín: <span id="minTemp"></span>°C
+              </div>
+              <div id="description">...</div>
+            </div>
+            <!-- Agrega más forecast-items para otros días -->
+          </div>
+          <!-- Icono del clima -->
+          <div class="flex justify-center items-center lg:justify-end">
+            <img id="forecast-icon" alt="Icono del clima" class="w-24 h-24" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Mapa interactivo -->
+      <div id="map-container" class="bg-white rounded-lg shadow-md p-4 mb-4">
+        <h2 class="text-xl font-semibold mb-2">Mapa Interactivo</h2>
+        <!-- Contenedor para el mapa de Google Maps -->
+        <div
+          id="google-map"
+          class="w-full rounded-lg"
+          style="height: 400px"
+        ></div>
+      </div>
+
+      <!-- Selección de vista de temperatura -->
+      <div class="mb-4">
+        <label
+          for="view-selector"
+          class="block text-lg font-medium text-gray-700"
+          >Seleccionar Vista:</label
+        >
+        <select
+          id="view-selector"
+          class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+        >
+          <option value="nein">Seleccione una Opcion</option>
+          <option value="today">Hoy</option>
+          <option value="week">Toda la Semana</option>
+        </select>
+      </div>
+
+      <!-- Gráficas de temperatura -->
+      <div class="bg-white rounded-lg shadow-md p-4 mb-4">
+        <div class="flex flex-row" style="align-items: baseline;"><h2 class="text-xl font-semibold mb-2">Tendencia de Temperatura</h2>&nbsp;<p>(Mantenga el cursor sobre una barra para ver su temp.)</p></div>
+        <div id="temperature-chart" class="chart-container overflow-auto"></div>
+      </div>
+
+      <!-- Widgets personalizables -->
+      <div class="bg-white rounded-lg shadow-md p-4 mb-4">
+        <h2 class="text-xl font-semibold mb-2">Widgets Personalizables</h2>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="widget bg-blue-200 p-4 rounded-lg">Temperatura</div>
+          <div class="widget bg-green-200 p-4 rounded-lg">Humedad</div>
+          <!-- Agrega más widgets según sea necesario -->
+        </div>
+      </div>
+
+      <!-- Alertas meteorológicas -->
+      <div class="bg-white rounded-lg shadow-md p-4 mb-4">
+        <h2 class="text-xl font-semibold mb-2">Alertas Meteorológicas</h2>
+        <div class="alerts">
+         
+        </div>
+      </div>
+
+      <!-- Información adicional -->
+      <div class="bg-white rounded-lg shadow-md p-4 mb-4">
+        <h2 class="text-xl font-semibold mb-2">Información Adicional</h2>
+        <div class="additional-info">
+          <div class="info-item">Velocidad del Viento: 10 km/h</div>
+          <div class="info-item">Humedad: 70%</div>
+          <!-- Agrega más info-items según sea necesario -->
+        </div>
+      </div>
+
+      <!-- Temas oscuros y claros -->
+      <div class="bg-white rounded-lg shadow-md p-4 mb-4">
+        <h2 class="text-xl font-semibold mb-2">Temas Oscuros y Claros</h2>
+        <button
+          id="dark-theme-btn"
+          class="bg-gray-800 text-white px-4 py-2 rounded-md mr-2"
+        >
+          Tema Oscuro
+        </button>
+        <button id="light-theme-btn" class="bg-gray-300 px-4 py-2 rounded-md">
+          Tema Claro
+        </button>
+      </div>
+
+      <!-- Historial de consultas -->
+      <div class="bg-white rounded-lg shadow-md p-4 mb-4">
+        <h2 class="text-xl font-semibold mb-2">Historial de Consultas</h2>
+        <ul>
+          <li>Ecatepec</li>
+          <li>Los Mochis</li>
+          <!-- Agrega más elementos del historial según sea necesario -->
+        </ul>
+      </div>
+    </div>
+
+    <!-- Tu script.js y cualquier otro script que necesites -->
+    <script src="script.js" defer></script>
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDROtw8dKl4pYslgwlDo9W7oFwM8GkoOfY&callback=initMap"
+      defer
+    ></script>
+  </body>
+</html>

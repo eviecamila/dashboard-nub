@@ -1,0 +1,149 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.weather-card {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+    position: relative;
+}
+
+.location {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+#temp {
+    font-size: 48px;
+}
+
+.temperature {
+    font-size: 20px;
+}
+
+.description {
+    font-size: 20px;
+    color: #666;
+}
+
+.icon1 {
+    background-position: 0 0;
+    width: 50px;
+    height: 50px;
+}
+
+.icon2 {
+    background-position: -50px 0;
+    width: 50px;
+    height: 50px;
+}
+
+.icon3 {
+    background-position: -100px 0;
+    width: 50px;
+    height: 50px;
+}
+
+.weather-card img {
+    position: relative;
+    z-index: 2;
+}
+
+.arco {
+    width: 100px;
+    height: 100px;
+    border: 5px solid;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    margin: 0 auto;
+}
+
+.arco-inside {
+    position: absolute;
+    bottom: -10px;
+    width: 70px;
+    height: 30px;
+    text-align: center;
+    background-color: #fff;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+#description {
+    text-transform: capitalize;
+}
+
+.chart-container {
+    display: grid;
+    place-items: center;
+    height: 200px;
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.bar {
+    width: 20px;
+    margin: 0 4px;
+    background-color: #4f46e5;
+    border-radius: 4px 4px 0 0;
+    transition: height 0.3s ease-in-out;
+}
+
+.bar:hover {
+    background-color: #3b82f6;
+}
+
+.chart-label {
+    text-align: center;
+    margin-top: 8px;
+    width: 40px;
+}
+
+.chart-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.chart-labels {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+
+.hourly-chart-row {
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    left: 3%;
+    bottom:-25px;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.weekly-chart-row {
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    bottom:-30px;
+    justify-content: space-between;
+    align-items: flex-end;
+}
