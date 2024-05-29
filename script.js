@@ -44,8 +44,8 @@ const dias = ['Domingo',  // Agrega el Domingo como el primer elemento del arreg
 const queryParams = new URLSearchParams(window.location.search)
 // Quite las API Keys para hacerlo publico
 // GCloud API Key
-const apiKey = 'your gCloud API key',
-    tioApi = 'your tomorrow.io API KEY'
+const apiKey = 'your G-Cloud APIKey',
+    tioApi = 'your tomorrow io APIKey'
 let city = queryParams.get('c') || queryParams.get('city') || 'Los Mochis';
 console.log(city);
 async function obtenerCoordenadas(query) {
@@ -64,8 +64,8 @@ async function fetchWeatherData(city) {
     try {
         const location = await obtenerCoordenadas(city);
         // const url = `./forecast.json`;
-        // const url = `./mexicali.json`;
-        const url = `https://api.tomorrow.io/v4/weather/forecast?location=${location.coordenadas}&apikey=${tioApi}`;
+        const url = `./mexicali.json`;
+        // const url = `https://api.tomorrow.io/v4/weather/forecast?location=${location.coordenadas}&apikey=${tioApi}`;
         const response = await fetch(url);
         if (!response.ok) {
             throw new Error('Network response was not ok.');
@@ -106,6 +106,111 @@ async function datos() {
     main();
     renderTemperatureTrends(weatherData);
     generarAlertasConFecha(weatherData);
+    cargarHistorial();
+}
+let added = false;
+// Función para cargar el historial desde localStorage
+function cargarHistorial() {
+    const historialString = localStorage.getItem('historial');
+    if (!historialString) return;
+
+    const historial = JSON.parse(historialString);
+
+    const listaHistorial = document.getElementById('historial-lista');
+
+    // Limpiar la lista antes de agregar nuevos elementos
+    listaHistorial.innerHTML = '';
+
+    historial.forEach(consulta => {
+        const ciudad = Object.keys(consulta)[0];
+        const fecha = consulta[ciudad];
+
+        // Crear el elemento li
+        const item = document.createElement('li');
+        item.className = 'historial-item';
+
+        // Crear un span para la ciudad y agregarla al li
+        const ciudadSpan = document.createElement('span');
+        ciudadSpan.textContent = ciudad;
+        item.appendChild(ciudadSpan);
+
+        // Crear un span para la fecha y hora de consulta y agregarla al li
+        const fechaSpan = document.createElement('span');
+        fechaSpan.textContent = fecha;
+        item.appendChild(fechaSpan);
+
+        // Crear el botón de eliminar y agregarlo al li
+        const botonEliminar = document.createElement('button');
+        botonEliminar.textContent = 'X';
+        botonEliminar.className = 'eliminar-btn';
+        botonEliminar.onclick = function () {
+            eliminarConsulta(ciudad);
+        eliminarConsulta(ciudad);
+        };
+        const botonVisitar = document.createElement('button');
+        botonVisitar.textContent = '¬';
+        botonVisitar.className = 'visit-btn';
+        botonVisitar.onclick = function () {location.href ='/?c='+city}
+        const btns = document.createElement('div');
+        btns.style.display = 'flex'
+        const split = document.createElement('div');
+        split.style.width ='14px'
+        btns.appendChild(botonVisitar);
+        btns.appendChild(split);
+        btns.appendChild(botonEliminar);
+        item.appendChild(btns);
+        // Agregar el li a la lista
+        listaHistorial.appendChild(item);
+    });
+    if (!added)agregarConsulta(city);
+}
+
+// Función para eliminar una consulta del historial
+function eliminarConsulta(ciudad) {
+    const historialString = localStorage.getItem('historial');
+    if (!historialString) return;
+
+    let historial = JSON.parse(historialString);
+
+    historial = historial.filter(consulta => Object.keys(consulta)[0] !== ciudad);
+
+    localStorage.setItem('historial', JSON.stringify(historial));
+
+    cargarHistorial();
+}
+
+// Función para agregar una consulta al historial
+function agregarConsulta(ciudad) {
+    if (added) return;
+    added = true;
+    let historialString = localStorage.getItem('historial');
+    let historial = historialString ? JSON.parse(historialString) : [];
+
+    // Obtener la fecha y hora actual
+    const fechaActual = new Date().toISOString().slice(0, 19).replace('T', ' ');
+
+    // Verificar si la ciudad ya existe en el historial
+    const indice = historial.findIndex(consulta => Object.keys(consulta)[0] === ciudad);
+
+    // Si la ciudad ya existe en el historial, actualizar la fecha
+    if (indice !== -1) {
+        historial[indice][ciudad] = fechaActual;
+    } else {
+        // Si la ciudad no existe en el historial, agregarla al principio
+        const nuevaConsulta = { [ciudad]: fechaActual };
+        historial.unshift(nuevaConsulta);
+
+        // Limitar el historial a un máximo de, por ejemplo, 10 elementos
+        if (historial.length > 10) {
+            historial = historial.slice(0, 10);
+        }
+    }
+
+    // Guardar el historial actualizado en el localStorage
+    localStorage.setItem('historial', JSON.stringify(historial));
+
+    // Recargar el historial
+    cargarHistorial();
 }
 
 
@@ -191,10 +296,10 @@ function renderWeeklyTemperatureTrends(data) {
     const weeklyChart = document.getElementById('temperature-chart');
     const daysOfWeek = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
     const weeklyForecast = data.timelines.daily.slice(0, 7); // Próximos 7 días
-    
+
     const currentDate = new Date(); // Obtener la fecha actual
     const currentDayIndex = currentDate.getDay(); // Obtener el índice del día actual (0 para domingo, 1 para lunes, etc.)
-    
+
     const daysOfWeekStartingToday = daysOfWeek.slice(currentDayIndex).concat(daysOfWeek.slice(0, currentDayIndex)); // Ajustar los días de la semana para empezar desde el día actual
 
     const weeklyRow = document.createElement('div');
@@ -288,7 +393,7 @@ function initMap(defaultLocation = { lat: 25.7936, lng: -108.9981 }) {
     });
 }
 
-const host = 'http://localhost:5500/?c=',
+const host = '/?c=',
     searchBar = document.getElementById('searchBar')
 function buscarCiudad() {
     window.location = `${host}${searchBar.value}`;
